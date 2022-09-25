@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiro ao alvo</title>
+</head>
+<body>
+    <canvas width="700" height="500"></canvas>
+    <br>
+    <button>CLIQUE AQUI PARA ESCOLHER A DIFICULDADE E INICIAR O JOGO</button>
+    
+    <script>
+    
+        var tela = document.querySelector('canvas');
+        var pincel = tela.getContext('2d');
+        var button = document.querySelector("button");
+    
+        pincel.fillStyle = 'lightgray';
+        pincel.fillRect(0, 0, 700, 500);
+
+        function desenhaCirculo(x, y, raio) {
+
+            pincel.fillStyle = "blue";
+            pincel.beginPath();
+            pincel.arc(x, y, raio, 0, 2 * Math.PI);
+            pincel.fill();
+        }
+        
+        function limpaTela() {
+            pincel.clearRect(0, 0, 650, 450);
+            pincel.fillStyle = 'lightgray';
+            pincel.fillRect(0, 0, 650, 450);
+        }
+
+        var x = 20;
+        var y = 20;
+        var raio1x = 0;
+        var raio2x = 0;
+        var raio1y = 0;
+        var raio2y = 0;
+        function atualizaBola() {
+            x = Math.round(Math.random() * 600);
+            y = Math.round(Math.random() * 400);
+            raio1x = x + 10;
+            raio2x = x - 10;
+            raio1y = y + 10;
+            raio2y = y - 10;
+        }
+        function atualizaTela() {
+            
+            limpaTela();
+            desenhaCirculo(x, y, 10);
+        }
+        function desenhaTexto(texto, x, y) {
+            pincel.fillStyle = "black";
+            pincel.font = "20px Georgia";
+            pincel.fillText(texto, x, y);
+        }
+
+        function iniciaJogo() {
+            var timer = prompt("Escolha a dificuldade: fácil, médio ou difícil")
+            while(timer!="fácil" && timer!="médio" && timer!="difícil") {
+                timer = prompt("Escolha a dificuldade: fácil, médio ou difícil")
+            }
+            var auxTimer = 0
+            if(timer == "fácil") {
+                auxTimer = 2000
+            }
+            if(timer == "médio") {
+                auxTimer = 1000
+            }
+            if(timer == "difícil") {
+                auxTimer = 500
+            }
+            setInterval(atualizaBola, auxTimer);
+            setInterval(atualizaTela, auxTimer);
+        }
+        var contador = 0;
+        function dispara(evento) {
+
+            var xBola = evento.pageX - tela.offsetLeft;
+            var yBola = evento.pageY - tela.offsetTop;
+            if(raio1x>xBola && xBola>raio2x && raio1y>yBola && yBola>raio2y){
+                contador++;
+                pincel.clearRect(0, 0, 700, 500);
+                pincel.fillStyle = 'lightgray';
+                pincel.fillRect(0, 0, 700, 500);
+                pincel.fillStyle = "black";
+                pincel.font = "20px Georgia";
+                pincel.fillText("contador:", 580, 490);
+                pincel.fillText(contador, 670, 490);
+            }
+        }
+        tela.onclick = dispara;
+        button.onclick = iniciaJogo
+    </script>
+</body>
+</html>
